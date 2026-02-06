@@ -1,0 +1,187 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  EC2 Auto Start/Stop Scheduler using EventBridge, Lambda, DynamoDB, and SNS.
+  Infrastructure is fully managed using CloudFormation with least-privilege IAM
+  and tag-based EC2 control.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default:  dev
+    AllowedValues:
+      - dev
+      - prod
+    Description: Deployment environment name
+  
+  ScheduleTagKey:
+    Type: String
+    Default: PowerStrategy
+    Description: EC2 tage key for Scheduling control
+  
+  ScheduleTagValue:
+    Type: String
+    Default: EcoMode
+    Description: EC2 tags value for Scheduling control
+
+  NotificationEmail:
+    Type: String
+    Description: Email address to recievne SNS Notification about EC2 Start/Stop
+  
+Resources:
+  ExecutionHistoryTable:
+    Type: AWS::DynamoDB::Table 
+    Properties:
+      TableName: !Sub ec2-execution-history-${EnvironmentName}
+      BillingMode: PAY_PER_REQUEST
+
+      AttributeDefinitions:
+       - AttributeName: ExecutionId
+         AttributeType: S
+
+      KeySchema:
+       - AttributeName: ExecutionId
+         KeyType: HASH
+
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+      Tags:
+       - Key: Project
+         Value: EC2-Auto-Start-Stop
+       - Key: Environment
+         Value: !Ref EnvironmentName
+  
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ec2-scheduler-lambda-role-${EnvironmentName}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+      Policies:
+        - PolicyName: ec2-scheduler-inline-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                  - ec2:StartInstances
+                  - ec2:StopInstances
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt ExecutionHistoryTable.Arn
+
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref NotificationTopic
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+
+  NotificationTopic:
+    Type: AWS::SNS::Topic 
+    Properties:
+      TopicName: !Sub ec2-scheduler-alerts-${EnvironmentName}
+      Tags:
+        - Key: Project
+          Value: EC2-Auto-Start-Stop
+        - Key: Environment
+          Value:  !Ref EnvironmentName
+  
+  NotificationSubscription:
+    Type: AWS::SNS::Subscription 
+    Properties:
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
+      TopicArn: !Ref NotificationTopic
+  
+  Ec2SchedulerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ec2-scheduler-${EnvironmentName}
+      Runtime: python3.12
+      Handler: ec2_scheduler.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 30
+      MemorySize: 128
+
+      Code:
+        S3Bucket: ec2-schedule-start-stop-120512
+        S3Key: ec2_scheduler.zip
+
+      Environment:
+        Variables:  
+          TAG_KEY: !Ref ScheduleTagKey
+          TAG_VALUE: !Ref ScheduleTagValue
+          DYNAMODB_TABLE: !Ref ExecutionHistoryTable
+          SNS_TOPIC_ARN: !Ref NotificationTopic
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Ec2SchedulerFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+  
+  LambdaInvokePermissionStart:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Ec2SchedulerFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Ec2StartRule.Arn
+
+
+  LambdaInvokePermissionStop:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Ec2SchedulerFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Ec2StopRule.Arn
+
+  
+  Ec2StartRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ec2-start-schedule-${EnvironmentName}
+      Description: Start EC2 instances based on tag schedule
+      ScheduleExpression: cron(0 15 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt Ec2SchedulerFunction.Arn
+          Id: StartEc2Target
+          Input: |
+            {
+            "action": "start"
+            }
+
+  Ec2StopRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub ec2-stop-schedule-${EnvironmentName}
+      Description: Stop EC2 instances based on tag schedule
+      ScheduleExpression: cron(30 16 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt Ec2SchedulerFunction.Arn
+          Id: StopEc2Target
+          Input: |
+            {
+              "action":"stop"
+            }
