@@ -10,6 +10,9 @@ This project follows Infrastructure as Code (IaC) principles using AWS CloudForm
 ---
 
 ## Architecture
+![architecture core flow diagram](<diagrams/core flow architecture.png>)
+[Architecture readme](Architecture/Architecuture.md) (brief description about the architecture core flow of the project)
+
 
 ### Core Serverless Flow
 EventBridge (cron schedule)  
