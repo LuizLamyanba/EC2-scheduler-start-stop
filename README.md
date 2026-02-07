@@ -15,7 +15,7 @@ This project follows Infrastructure as Code (IaC) principles using AWS CloudForm
 [Architecture readme](Architecture/Architecuture.md) (brief description about the architecture core flow of the project)
 
 ### Core Serverless Flow
-EventBridge (cron schedule)  
+ → EventBridge (cron schedule)  
  → Lambda (boto3 automation logic)  
  → EC2 (start / stop based on tags)  
  → DynamoDB (execution history)  
@@ -56,8 +56,8 @@ EventBridge (cron schedule)
 
 Only EC2 instances with the following tag are affected:
 
-Key: Schedule
-Value: OfficeHours
+Key: PowerStrategy
+Value: EcoMode (this key and value is for this project , can be modified)
 
 This ensures:
  - No accidental shutdowns  
@@ -67,7 +67,9 @@ This ensures:
 
 ---
 
-## Infrastructure as Code
+## Infrastructure as Code\
+![CloudFormation readme](<diagrams/template architecture flow diagram.png>)
+[CloudFormation readme](Architecture/cloudformation-architecture.md)
 
 All resources are provisioned using AWS CloudFormation.
 
