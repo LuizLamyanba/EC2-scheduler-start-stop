@@ -67,7 +67,7 @@ This ensures:
 
 ---
 
-## Infrastructure as Code\
+## Infrastructure as Code
 ![CloudFormation readme](<diagrams/template architecture flow diagram.png>)
 [CloudFormation readme](Architecture/cloudformation-architecture.md)
 
