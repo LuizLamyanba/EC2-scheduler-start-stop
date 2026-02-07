@@ -74,8 +74,8 @@ The EventBridge rules invoke a single Lambda function:
 - Execute:
   - `StartInstances` for stopped instances
   - `StopInstances` for running instances
-- Prevent unnecessary actions by checking instance state
-- Handle validation and error scenarios gracefully
+  - Prevent unnecessary actions by checking instance state
+  - Handle validation and error scenarios resiliently
 
 The Lambda function is deployed as an S3 artifact and referenced by CloudFormation.
 
@@ -193,10 +193,6 @@ This ensures system resilience and predictable behavior.
 
 ---
 
-## Architecture Summary
-
-
----
 
 ## Conclusion
 
@@ -204,7 +200,7 @@ This architecture demonstrates:
 - Real-world serverless automation
 - Secure and scalable cloud design
 - Cost optimization through scheduled resource control
-- Production-grade observability and auditability
+- Production-grade foundation level observability and auditability 
 
 The system is intentionally simple, focused, and extensible, making it suitable for both learning and real operational use cases.
 
