@@ -172,7 +172,8 @@ Before deployment, the following prerequisites must be met:
 ## Step 2: Upload Lambda Artifact to S3
  Upload the packaged Lambda artifact to the S3 bucket referenced in the CloudFormation template:
  
- aws s3 cp ec2_scheduler.zip s3://<artifact-bucket-name>/ec2_scheduler.zip
+ -> aws s3 cp ec2_scheduler.zip s3://<artifact-bucket-name>/ec2_scheduler.zip
+ 
  This S3 object acts as the immutable deployment artifact for Lambda.
 
 ## Step 3: Validate the CloudFormation Template
@@ -201,6 +202,7 @@ Before deployment, the following prerequisites must be met:
  Click Confirm subscription
  SNS notifications will not be delivered until this step is completed.
 
+---
 
 ## Testing 
  Testing is performed in two phases to ensure correctness and safety.
@@ -209,7 +211,7 @@ Before deployment, the following prerequisites must be met:
  Manual testing is performed before trusting scheduled automation.
  Using the AWS Lambda console, create a test event:
   
-  {
+ ->  {
   "action": "stop"
   }
  
@@ -221,7 +223,7 @@ Before deployment, the following prerequisites must be met:
  
  Repeat the test with:
   
-  {
+  -> {
   "action": "start"
   }
 
@@ -246,6 +248,7 @@ Before deployment, the following prerequisites must be met:
  - Verify CloudFormation reflects the final desired state
  All subsequent changes must be applied through CloudFormation updates to prevent configuration drift.
 
+---
 
 ## Results
  The EC2 Auto Start/Stop Scheduler was successfully deployed and validated in a live AWS environment.
@@ -259,15 +262,15 @@ Before deployment, the following prerequisites must be met:
 
 ![sns notification](<snippets/sns notification.png>)
 
- SNS notification
+ #### SNS notification
 
  ![manual lambda test](<snippets/manual test.png>)
 
- Manual Lambda test result
+ #### Manual Lambda test result
 
  ![history table](<snippets/table history.png>)
 
- Dynamo DB history log table
+ #### Dynamo DB history log table
 
  These results confirm that the system performs reliably and safely as designed. 
 
