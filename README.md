@@ -259,18 +259,19 @@ Before deployment, the following prerequisites must be met:
   - **Real-time success and failure notifications** delivered via SNS email alerts
   - **Stable operation under repeated scheduled executions**
   - **No unintended impact** on untagged EC2 instances
+ 
+ #### SNS notification
 
 ![sns notification](<snippets/sns notification.png>)
 
- #### SNS notification
+  #### Manual Lambda test result
 
  ![manual lambda test](<snippets/manual test.png>)
 
- #### Manual Lambda test result
+  #### Dynamo DB history log table
 
  ![history table](<snippets/table history.png>)
 
- #### Dynamo DB history log table
 
  These results confirm that the system performs reliably and safely as designed. 
 
