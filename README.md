@@ -139,7 +139,7 @@ This enables:
 
 CloudWatch Logs are retained for low-level debugging, while DynamoDB serves as the system’s authoritative execution history.
 
-
+---
 
 ## Deployment 
 
@@ -166,7 +166,8 @@ Before deployment, the following prerequisites must be met:
 ## Step 1: Package the Lambda Function
  The Lambda function code is packaged locally and uploaded to Amazon S3.
  From the `lambda/` directory:
- ![zip python file](<snippets/zipping .py.png>)
+
+![zip python file](<snippets/zipping .py.png>)
 
 ## Step 2: Upload Lambda Artifact to S3
  Upload the packaged Lambda artifact to the S3 bucket referenced in the CloudFormation template:
@@ -177,7 +178,7 @@ Before deployment, the following prerequisites must be met:
 ## Step 3: Validate the CloudFormation Template
  Before deployment, the template is validated to catch syntax or structural errors:
 
-![template validation](<snippets/validate template.png>)
+ ![template validation](<snippets/validate template.png>)
 
  Successful validation confirms the template is ready for deployment.
 
@@ -194,6 +195,7 @@ Before deployment, the following prerequisites must be met:
 ## Step 5: Confirm SNS Email Subscription
  After stack creation:
  Check the inbox for the SNS subscription confirmation email
+
  ![sns subscription confirmation](<snippets/sns subscription ss.png>)
 
  Click Confirm subscription
@@ -256,15 +258,20 @@ Before deployment, the following prerequisites must be met:
   - **No unintended impact** on untagged EC2 instances
 
 ![sns notification](<snippets/sns notification.png>)
+
  SNS notification
+
  ![manual lambda test](<snippets/manual test.png>)
+
  Manual Lambda test result
+
  ![history table](<snippets/table history.png>)
+
  Dynamo DB history log table
 
  These results confirm that the system performs reliably and safely as designed. 
 
-
+---
 
 ## Monitoring & Alerts
  The system provides foundational monitoring and alerting using AWS managed services:
@@ -274,6 +281,8 @@ Before deployment, the following prerequisites must be met:
  - **CloudWatch Logs** – Lambda execution logs capture detailed runtime and error information
  
  This approach ensures visibility into automation outcomes without introducing additional monitoring complexity.
+
+---
 
 ## Cost Optimization Impact
  This project directly addresses EC2 cost optimization by eliminating unnecessary compute runtime.
@@ -286,12 +295,17 @@ Before deployment, the following prerequisites must be met:
  This design demonstrates a cost-aware cloud engineering mindset aligned with real-world production environments.
 
 
+---
+
 ## What I Learned 
  - Designing event-driven serverless architectures using AWS managed services
  - Using tag-based governance to safely control cloud resources
  - Testing automation safely using manual and scheduled execution strategies
  - Understanding the difference between request-driven and event-driven systems
  - Balancing observability needs without overengineering the solution
+
+
+---
 
 ## Future Improvements
 
