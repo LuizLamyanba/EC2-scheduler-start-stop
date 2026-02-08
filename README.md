@@ -211,9 +211,9 @@ Before deployment, the following prerequisites must be met:
  Manual testing is performed before trusting scheduled automation.
  Using the AWS Lambda console, create a test event:
   
- ->  {
-  "action": "stop"
-  }
+ - ```json
+    { "action": "stop" }
+    ```
  
  Expected Results:
   - Tagged EC2 instances transition to stopped
@@ -221,11 +221,11 @@ Before deployment, the following prerequisites must be met:
   - A success notification email is received
   - No unhandled errors appear in CloudWatch Logs
  
- Repeat the test with:
+  Repeat the test with:
   
-  -> {
-  "action": "start"
-  }
+  ```json
+    { "action": "start" }
+    ```
 
 ## Step 7: EventBridge Automation Test
  To validate scheduled execution without waiting for real business hours:
