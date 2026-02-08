@@ -1,5 +1,6 @@
 # Architecture Overview – EC2 Auto Start/Stop Scheduler
 
+
 This document explains the architecture and execution flow of the **EC2 Auto Start/Stop Scheduler** implemented using AWS serverless and event-driven services.  
 The entire infrastructure is provisioned and managed using **AWS CloudFormation**, ensuring reproducibility, security, and consistency.
 
