@@ -223,7 +223,7 @@ Before deployment, the following prerequisites must be met:
  
   Repeat the test with:
   
-  ```json
+ -```json
     { "action": "start" }
     ```
 
