@@ -160,6 +160,7 @@ This prevents unintended or unauthorized invocations.
 ## Tag-Based Control Model
 
 The scheduler targets EC2 instances based on tags:
+
 In this project we are using
 Tags: PowerStrategy
 Value: EcoMode
