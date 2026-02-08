@@ -221,10 +221,10 @@ Before deployment, the following prerequisites must be met:
   - A success notification email is received
   - No unhandled errors appear in CloudWatch Logs
  
-  Repeat the test with:
+ Repeat the test with:
   
- -```json
-    { "action": "start" }
+ - ```json
+    { "action": "stop" }
     ```
 
 ## Step 7: EventBridge Automation Test
