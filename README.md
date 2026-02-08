@@ -172,7 +172,9 @@ Before deployment, the following prerequisites must be met:
 ## Step 2: Upload Lambda Artifact to S3
  Upload the packaged Lambda artifact to the S3 bucket referenced in the CloudFormation template:
  
- -> aws s3 cp ec2_scheduler.zip s3://<artifact-bucket-name>/ec2_scheduler.zip
+ ```bash
+ aws s3 cp ec2_scheduler.zip s3://<your-bucket-name>/ec2_scheduler.zip 
+ ```
  
  This S3 object acts as the immutable deployment artifact for Lambda.
 
